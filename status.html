@@ -5,11 +5,197 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Track Order - PrintPath</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* --- Animations --- */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Page Layout --- */
+        .track-container {
+            max-width: 750px;
+            margin: 40px auto;
+            animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .track-card {
+            background: var(--card-bg);
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            border-top: 6px solid var(--accent);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .track-card {
+                box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+                background: #1a1a1a;
+            }
+        }
+
+        /* --- Search Input Styling --- */
+        .search-group {
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 20px;
+            font-size: 1.5rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 12px;
+            border: 2px solid #e1e1e1;
+            background-color: rgba(0, 0, 0, 0.02);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 8px 20px rgba(0, 174, 66, 0.15);
+            background-color: transparent;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .search-input {
+                background-color: rgba(255, 255, 255, 0.05);
+                border-color: #444;
+            }
+        }
+
+        .btn-track {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 20px rgba(0, 174, 66, 0.3);
+        }
+
+        /* --- Dynamic Progress Bar --- */
+        .progress-wrapper {
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .progress-track-line {
+            position: absolute;
+            top: 25px;
+            left: 5%;
+            width: 90%;
+            height: 6px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+            z-index: 1;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .progress-track-line { background-color: #333; }
+        }
+
+        .progress-fill {
+            position: absolute;
+            top: 25px;
+            left: 5%;
+            height: 6px;
+            background-color: var(--accent);
+            border-radius: 3px;
+            z-index: 2;
+            width: 0%; /* Controlled by JS */
+            transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            z-index: 3;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 20%;
+            opacity: 0.5;
+            transition: opacity 0.5s ease;
+        }
+
+        .step.active {
+            opacity: 1;
+        }
+
+        .step-icon {
+            width: 56px;
+            height: 56px;
+            background-color: var(--card-bg);
+            border: 4px solid #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            transition: all 0.5s ease;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .step-icon { border-color: #333; }
+        }
+
+        .step.active .step-icon {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 15px rgba(0, 174, 66, 0.3);
+            transform: scale(1.1);
+        }
+
+        .step.completed .step-icon {
+            background-color: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: var(--text-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- Order Details Grid --- */
+        .order-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            background: rgba(0,0,0,0.03);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .order-details-grid { background: rgba(255,255,255,0.05); }
+        }
+
+        .detail-item p { margin: 0; font-size: 0.9rem; color: #888; text-transform: uppercase; }
+        .detail-item h4 { margin: 5px 0 0 0; font-size: 1.1rem; color: var(--text-color); }
+    </style>
 </head>
 <body>
     <header>
         <h1><a href="index.html">PrintPath</a></h1>
         <nav>
+            <a href="get_started.html">Get Started</a>
             <a href="items.html">Presets</a>
             <a href="custom.html">Custom Print</a>
             <a href="status.html">Track Order</a>
@@ -17,32 +203,190 @@
     </header>
 
     <main>
-        <div id="status-search">
-            <h2 style="text-align: center; margin-bottom: 20px;">Track Your Print</h2>
-            <form id="status-form" action="javascript:void(0);">
-                <div class="form-group">
-                    <label style="text-align: center;">Enter your Order ID (e.g., PP-1234)</label>
-                    <input type="text" id="order_id_input" required style="text-align: center; font-size: 1.2rem; text-transform: uppercase;">
+        <div class="track-container">
+            <div class="track-card">
+                
+                <div id="status-search">
+                    <h2 style="text-align: center; margin-bottom: 10px; font-size: 2.5rem;">Track Your Print</h2>
+                    <p style="text-align: center; color: #666; margin-bottom: 30px;">Enter your unique Order ID to see real-time progress.</p>
+                    
+                    <form id="premium-track-form" action="javascript:void(0);">
+                        <div class="search-group">
+                            <input type="text" id="order_id_input" class="search-input" placeholder="e.g., PP-1234" required autocomplete="off">
+                        </div>
+                        <button type="submit" class="btn btn-track" id="search-btn">Locate Order</button>
+                    </form>
+                    
+                    <div id="status-error" style="color: #ff3b30; background: rgba(255,59,48,0.1); padding: 15px; border-radius: 8px; text-align: center; margin-top: 20px; display: none; font-weight: bold;"></div>
                 </div>
-                <button type="submit" class="btn" style="width: 100%;">Check Status</button>
-            </form>
-            <div id="status-error" style="color: red; text-align: center; margin-top: 15px; display: none; font-weight: bold;"></div>
-        </div>
 
-        <div id="status-result" style="display: none; background: var(--card-bg); padding: 2rem; border-radius: 8px; border-top: 5px solid var(--accent); max-width: 600px; margin: 0 auto; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
-            <h2 id="status-title" style="color: var(--accent); margin-bottom: 5px;"></h2>
-            <p id="status-desc" style="font-size: 1.1rem; color: #555;"></p>
-            
-            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
-            
-            <p><strong>Order ID:</strong> <span id="display-order-id"></span></p>
-            <p><strong>Customer:</strong> <span id="display-name"></span></p>
-            <p><strong>Item:</strong> <span id="display-item"></span></p>
-            
-            <button class="btn" style="margin-top: 25px; width: 100%; background-color: #333;" onclick="location.reload()">Track Another Order</button>
+                <div id="status-result" style="display: none;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h2 id="status-title" style="color: var(--accent); font-size: 2.2rem; margin-bottom: 10px;"></h2>
+                        <p id="status-desc" style="font-size: 1.1rem; color: #888; max-width: 500px; margin: 0 auto;"></p>
+                    </div>
+
+                    <div class="progress-wrapper">
+                        <div class="progress-track-line"></div>
+                        <div class="progress-fill" id="progress-fill"></div>
+                        
+                        <div class="progress-steps">
+                            <div class="step" id="step-0">
+                                <div class="step-icon">📋</div>
+                                <span class="step-label">Pending</span>
+                            </div>
+                            <div class="step" id="step-1">
+                                <div class="step-icon">⏳</div>
+                                <span class="step-label">Queue</span>
+                            </div>
+                            <div class="step" id="step-2">
+                                <div class="step-icon">🖨️</div>
+                                <span class="step-label">Printing</span>
+                            </div>
+                            <div class="step" id="step-3">
+                                <div class="step-icon">📦</div>
+                                <span class="step-label">Waiting</span>
+                            </div>
+                            <div class="step" id="step-4">
+                                <div class="step-icon">✅</div>
+                                <span class="step-label">Delivered</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-details-grid">
+                        <div class="detail-item">
+                            <p>Order ID</p>
+                            <h4 id="display-order-id"></h4>
+                        </div>
+                        <div class="detail-item">
+                            <p>Customer Name</p>
+                            <h4 id="display-name"></h4>
+                        </div>
+                        <div class="detail-item" style="grid-column: 1 / -1;">
+                            <p>Print Item / Model</p>
+                            <h4 id="display-item"></h4>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-track" style="margin-top: 30px; background: transparent; border: 2px solid var(--accent); color: var(--text-color); box-shadow: none;" onclick="location.reload()">Track Another Order</button>
+                </div>
+
+            </div>
         </div>
     </main>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('premium-track-form');
+            
+            if (form) {
+                form.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    
+                    const orderId = document.getElementById('order_id_input').value.trim().toUpperCase();
+                    const errorDiv = document.getElementById('status-error');
+                    const resultDiv = document.getElementById('status-result');
+                    const searchDiv = document.getElementById('status-search');
+                    const searchBtn = document.getElementById('search-btn');
+
+                    // Temporary loading state
+                    searchBtn.textContent = "Searching...";
+                    searchBtn.style.opacity = "0.7";
+
+                    fetch('prints.json')
+                        .then(res => {
+                            if (!res.ok) throw new Error("Database offline");
+                            return res.json();
+                        })
+                        .then(data => {
+                            searchBtn.textContent = "Locate Order";
+                            searchBtn.style.opacity = "1";
+                            
+                            const order = data.find(o => o.order_id === orderId);
+                            
+                            if (order) {
+                                errorDiv.style.display = 'none';
+                                
+                                // Setup Text Data
+                                let title = '';
+                                let desc = '';
+                                let stepIndex = 0;
+
+                                switch(order.status) {
+                                    case 'PENDING':
+                                        title = "Processing Order";
+                                        desc = "We are double-checking your details and preparing your order.";
+                                        stepIndex = 0;
+                                        break;
+                                    case 'QUEUE':
+                                        title = "In Print Queue";
+                                        desc = "Your order is verified and waiting in line for an available printer.";
+                                        stepIndex = 1;
+                                        break;
+                                    case 'PRINTING':
+                                        title = "Printing Active";
+                                        desc = "Machine running! Your model is currently being printed.";
+                                        stepIndex = 2;
+                                        break;
+                                    case 'WAITING':
+                                        title = "Awaiting Delivery";
+                                        desc = "Print is complete! We will deliver it to you on campus shortly.";
+                                        stepIndex = 3;
+                                        break;
+                                    case 'DELIVERED':
+                                        title = "Delivered!";
+                                        desc = "Your print was successfully handed off. Enjoy!";
+                                        stepIndex = 4;
+                                        break;
+                                    default:
+                                        title = "Status Unknown";
+                                        desc = "Order logged, awaiting formal status update.";
+                                        stepIndex = 0;
+                                }
+
+                                document.getElementById('status-title').textContent = title;
+                                document.getElementById('status-desc').textContent = desc;
+                                document.getElementById('display-order-id').textContent = order.order_id;
+                                document.getElementById('display-name').textContent = order.name;
+                                document.getElementById('display-item').textContent = order.item_name;
+
+                                // Transition UI
+                                searchDiv.style.display = 'none';
+                                resultDiv.style.display = 'block';
+
+                                // Animate Progress Bar
+                                setTimeout(() => {
+                                    const fillWidths = ['0%', '25%', '50%', '75%', '100%'];
+                                    document.getElementById('progress-fill').style.width = fillWidths[stepIndex];
+
+                                    for(let i = 0; i <= 4; i++) {
+                                        const stepEl = document.getElementById(`step-${i}`);
+                                        if (i < stepIndex) {
+                                            stepEl.classList.add('active', 'completed');
+                                        } else if (i === stepIndex) {
+                                            stepEl.classList.add('active');
+                                            stepEl.classList.remove('completed');
+                                        } else {
+                                            stepEl.classList.remove('active', 'completed');
+                                        }
+                                    }
+                                }, 100);
+
+                            } else {
+                                errorDiv.style.display = 'block';
+                                errorDiv.textContent = 'Order ID not found. Please double check and try again.';
+                            }
+                        })
+                        .catch(err => {
+                            searchBtn.textContent = "Locate Order";
+                            searchBtn.style.opacity = "1";
+                            errorDiv.style.display = 'block';
+                            errorDiv.textContent = 'System error: Could not connect to the tracker database.';
+                        });
+                });
+            }
+        });
+    </script>
 </body>
 </html>

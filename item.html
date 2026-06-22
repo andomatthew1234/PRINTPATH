@@ -3,31 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Item Detail - PrintPath</title>
+    <title>Product - PrintPath</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- Split Panel Layout --- */
+        .product-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: start;
+            max-width: 1100px;
+            margin: 40px auto;
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Stack on smaller screens */
+        @media (max-width: 768px) {
+            .product-showcase { grid-template-columns: 1fr; gap: 30px; }
+        }
+
+        /* --- Image Gallery Side --- */
+        .product-gallery {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 40px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .product-gallery { box-shadow: 0 15px 35px rgba(0,0,0,0.3); }
+        }
+
+        .product-gallery img {
+            width: 100%;
+            border-radius: 12px;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* --- Info Side --- */
+        .product-info {
+            padding: 10px 0;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #888;
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+        
+        .back-link:hover { color: var(--accent); }
+
+        .product-info h2 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: var(--text-color);
+            line-height: 1.2;
+        }
+
+        .product-price {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 25px;
+        }
+
+        .product-desc {
+            font-size: 1.15rem;
+            line-height: 1.7;
+            color: #666;
+            margin-bottom: 35px;
+        }
+
+        @media (prefers-color-scheme: dark) { .product-desc { color: #bbb; } }
+
+        /* Feature Tags */
+        .feature-tags {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .feature-tag {
+            background: rgba(0, 174, 66, 0.1);
+            color: var(--accent);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        /* Purchase Button */
+        .btn-purchase {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            font-size: 1.25rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--accent), #00d250);
+            color: white;
+            border-radius: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            box-shadow: 0 10px 20px rgba(0, 174, 66, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-purchase:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px rgba(0, 174, 66, 0.4);
+        }
+        
+        /* Error/Loading State */
+        .system-msg { text-align: center; font-size: 1.3rem; margin-top: 100px; color: #888; }
+    </style>
 </head>
 <body>
     <header>
         <h1><a href="index.html">PrintPath</a></h1>
         <nav>
+            <a href="get_started.html">Get Started</a>
             <a href="items.html">Presets</a>
             <a href="custom.html">Custom Print</a>
+            <a href="status.html">Track Order</a>
         </nav>
     </header>
 
     <main>
-        <div id="item-detail-container" class="item-detail">
-            <img id="item-image" src="" alt="Loading...">
-            <div class="item-info">
-                <h2 id="item-name">Loading...</h2>
-                <p class="price" id="item-price">$-.--</p>
-                <p id="item-desc">Loading description...</p>
-                <br>
-                <a id="item-buy-btn" href="#" class="btn" target="_blank">Buy Now via Stripe</a>
-            </div>
+        <div id="dynamic-product-container">
+            <div class="system-msg">Retrieving blueprint details...</div>
         </div>
     </main>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('dynamic-product-container');
+            const urlParams = new URLSearchParams(window.location.search);
+            const itemId = urlParams.get('id');
+
+            if (!itemId) {
+                container.innerHTML = '<div class="system-msg">No item selected. <br><br><a href="items.html" class="btn">Go to Catalog</a></div>';
+                return;
+            }
+
+            fetch('data.json')
+                .then(res => {
+                    if (!res.ok) throw new Error("Database offline");
+                    return res.json();
+                })
+                .then(data => {
+                    const item = data.find(i => i.id === itemId);
+
+                    if (item) {
+                        // Inject Premium Layout
+                        container.innerHTML = `
+                            <div class="product-showcase">
+                                <div class="product-gallery">
+                                    <img src="${item.image}" alt="${item.name}">
+                                </div>
+                                <div class="product-info">
+                                    <a href="items.html" class="back-link">← Back to Catalog</a>
+                                    <h2>${item.name}</h2>
+                                    <div class="product-price">$${item.price.toFixed(2)}</div>
+                                    <p class="product-desc">${item.description}</p>
+                                    
+                                    <div class="feature-tags">
+                                        <div class="feature-tag">✨ Verified Preset</div>
+                                        <div class="feature-tag">🚀 Campus Delivery</div>
+                                        <div class="feature-tag">🛡️ Quality Guarantee</div>
+                                    </div>
+                                    
+                                    <a href="${item.stripe_link}" class="btn-purchase">Proceed to Checkout</a>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        container.innerHTML = '<div class="system-msg" style="color: #ff3b30;">Error: Item not found in catalog. <br><br><a href="items.html" class="btn">Return to Presets</a></div>';
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    container.innerHTML = '<div class="system-msg" style="color: #ff3b30;">Unable to connect to database. Please try again later.</div>';
+                });
+        });
+    </script>
 </body>
 </html>

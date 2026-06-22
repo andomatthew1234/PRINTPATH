@@ -5,48 +5,345 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Custom Request - PrintPath</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* --- Stunning Entry Animations --- */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(0, 174, 66, 0.4); }
+            70% { box-shadow: 0 0 0 12px rgba(0, 174, 66, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 174, 66, 0); }
+        }
+
+        /* --- Immersive Hero Banner --- */
+        .custom-hero {
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.8)), url('/assets/custom.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            text-align: center;
+            /* Adjusted padding and removed negative margin to prevent header bleeding */
+            padding: 100px 20px 140px 20px; 
+            border-radius: 0 0 24px 24px;
+            position: relative;
+            z-index: 1;
+            animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .custom-hero {
+                background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.95)), url('/assets/custom_dark.png');
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+            }
+        }
+
+        .custom-hero h2 {
+            font-size: 3.2rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .custom-hero p {
+            font-size: 1.15rem;
+            max-width: 650px;
+            margin: 0 auto;
+            color: #f0f0f0;
+            line-height: 1.6;
+        }
+
+        /* --- Premium Floating Form Card --- */
+        .premium-form {
+            position: relative;
+            z-index: 2;
+            background: var(--card-bg);
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+            border-top: 6px solid var(--accent);
+            max-width: 700px;
+            margin: -80px auto 60px auto; /* Overlaps precisely without hitting the header */
+            animation: fadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .premium-form {
+                box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+                background: #1a1a1a;
+            }
+        }
+
+        /* --- Slick Input Fields --- */
+        .premium-form .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .premium-form .form-group label {
+            font-size: 0.95rem;
+            color: var(--text-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            display: block;
+        }
+
+        .premium-form .form-group input {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 1.05rem;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            background-color: rgba(0, 0, 0, 0.03);
+            color: var(--text-color);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .premium-form .form-group input {
+                background-color: rgba(255, 255, 255, 0.05);
+            }
+        }
+
+        .premium-form .form-group input:hover {
+            background-color: rgba(0, 174, 66, 0.02);
+        }
+
+        .premium-form .form-group input:focus {
+            background-color: transparent;
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 8px 20px rgba(0, 174, 66, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* --- Custom Validation Styles --- */
+        .input-error {
+            border-color: #ff3b30 !important;
+            background-color: rgba(255, 59, 48, 0.05) !important;
+            animation: shake 0.4s ease-in-out;
+        }
+
+        .error-message {
+            color: #ff3b30;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            animation: slideDown 0.3s ease-out forwards;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Dynamic Submit Button & Particles --- */
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, var(--accent), #00d250);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 20px rgba(0, 174, 66, 0.3);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 25px rgba(0, 174, 66, 0.4);
+            animation: pulseGlow 2s infinite;
+        }
+
+        .submit-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 5px 10px rgba(0, 174, 66, 0.3);
+        }
+
+        .particle {
+            position: absolute;
+            background-color: var(--accent);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            animation: particleExplode 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        @keyframes particleExplode {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
+
+        .btn-clicked {
+            transform: scale(0.95) !important;
+            filter: brightness(1.3);
+            box-shadow: 0 0 40px var(--accent) !important;
+        }
+    </style>
 </head>
 <body>
     <header>
         <h1><a href="index.html">PrintPath</a></h1>
         <nav>
+            <a href="get_started.html">Get Started</a>
             <a href="items.html">Presets</a>
             <a href="custom.html">Custom Print</a>
             <a href="status.html">Track Order</a>
         </nav>
     </header>
 
-    <main>
-        <h2 style="text-align: center; margin-bottom: 20px;">Request a Custom Print</h2>
-        
-        <form action="https://api.web3forms.com/submit" method="POST">
-            
+    <main style="padding-top: 0;">
+        <div class="custom-hero">
+            <h2>Bring Your Own Model</h2>
+            <p>Have an .STL file or a link from Thingiverse? Paste it below. We'll analyze your model and prepare a high-quality print tailored to your specifications.</p>
+        </div>
+
+        <!-- Added novalidate and an ID to control the form via JS -->
+        <form id="custom-form" action="https://api.web3forms.com/submit" method="POST" class="premium-form" novalidate>
             <input type="hidden" name="access_key" value="2b680225-4d13-47b1-b29d-e8d4eda481c7">
-            
             <input type="hidden" name="redirect" value="https://andomatthew1234.github.io/PRINTPATH/checkout.html">
             
             <div class="form-group">
                 <label>Full Name *</label>
-                <input type="text" name="name" required>
+                <input type="text" name="name" required placeholder="E.g., Jane Doe">
             </div>
+            
             <div class="form-group">
-                <label>Email *</label>
-                <input type="email" name="email" required>
+                <label>Email Address *</label>
+                <input type="email" name="email" required placeholder="jane@example.com">
             </div>
+            
             <div class="form-group">
                 <label>Delivery Address / Classroom *</label>
-                <input type="text" name="address" required>
+                <input type="text" name="address" required placeholder="E.g., Room 104 or Library">
             </div>
+            
             <div class="form-group">
                 <label>Phone Number (Optional)</label>
-                <input type="tel" name="phone">
+                <input type="tel" name="phone" placeholder="0400 000 000">
             </div>
-            <div class="form-group">
-                <label>Link to 3D Model (Thingiverse, Printables, Google Drive) *</label>
-                <input type="url" name="model_link" required placeholder="https://...">
+            
+            <div class="form-group" style="margin-top: 35px;">
+                <label style="color: var(--accent); font-size: 1.1rem;">Link to 3D Model *</label>
+                <p style="font-size: 0.85rem; color: #888; margin-bottom: 10px;">Paste a link from Thingiverse, Printables, or Google Drive.</p>
+                <input type="url" name="model_link" required placeholder="https://www.thingiverse.com/..." style="border-color: rgba(0,174,66,0.3);">
             </div>
-            <button type="submit" class="btn">Submit Request & Pay</button>
+            
+            <button type="submit" id="submit-btn" class="submit-btn">Submit Request & Pay</button>
         </form>
     </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('custom-form');
+            const submitBtn = document.getElementById('submit-btn');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault(); // Stop standard submission to run custom validation
+                let isValid = true;
+
+                // Clear previous custom errors
+                document.querySelectorAll('.error-message').forEach(el => el.remove());
+                document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+
+                const inputs = form.querySelectorAll('input[required]');
+                
+                inputs.forEach(input => {
+                    let fieldValid = true;
+                    let errorMsg = "This field is required for your print.";
+
+                    if (!input.value.trim()) {
+                        fieldValid = false;
+                    } else if (input.type === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) {
+                        fieldValid = false;
+                        errorMsg = "Please enter a valid email address.";
+                    } else if (input.type === 'url' && !input.value.startsWith('http')) {
+                        fieldValid = false;
+                        errorMsg = "Please enter a valid URL starting with http:// or https://";
+                    }
+
+                    if (!fieldValid) {
+                        isValid = false;
+                        input.classList.add('input-error');
+                        
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = 'error-message';
+                        errorDiv.innerHTML = `⚠️ ${errorMsg}`;
+                        
+                        // Insert right after the input field
+                        input.parentNode.appendChild(errorDiv);
+                    }
+                });
+
+                if (isValid) {
+                    // Trigger the Insane Click Effect
+                    submitBtn.classList.add('btn-clicked');
+                    submitBtn.textContent = "Processing Blueprint...";
+                    createParticles(submitBtn);
+
+                    // Delay actual submission slightly so the user sees the explosion effect
+                    setTimeout(() => {
+                        form.submit();
+                    }, 1200);
+                }
+            });
+
+            function createParticles(button) {
+                const rect = button.getBoundingClientRect();
+                const btnCenterX = rect.left + rect.width / 2;
+                const btnCenterY = rect.top + rect.height / 2 + window.scrollY;
+
+                // Create 40 particles
+                for (let i = 0; i < 40; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    document.body.appendChild(particle);
+                    
+                    const size = Math.random() * 8 + 4;
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    
+                    particle.style.left = `${btnCenterX - size/2}px`;
+                    particle.style.top = `${btnCenterY - size/2}px`;
+                    
+                    const angle = Math.random() * Math.PI * 2;
+                    const velocity = Math.random() * 150 + 50;
+                    const tx = Math.cos(angle) * velocity;
+                    const ty = Math.sin(angle) * velocity;
+                    
+                    particle.style.setProperty('--tx', `${tx}px`);
+                    particle.style.setProperty('--ty', `${ty}px`);
+                    
+                    // Clean up DOM after animation finishes
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 800);
+                }
+            }
+        });
+    </script>
 </body>
 </html>

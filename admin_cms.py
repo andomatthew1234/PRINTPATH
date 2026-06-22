@@ -23,6 +23,10 @@ class PrintPathCMS:
         self.item_data = self.load_json(DATA_FILE)
         self.order_data = self.load_json(PRINTS_FILE)
 
+        # Track currently selected indices for editing
+        self.current_item_index = None
+        self.current_order_index = None
+
         # Tabview Controller
         self.tabview = ctk.CTkTabview(
             self.root, segmented_button_selected_color="#00AE42"
@@ -131,8 +135,13 @@ class PrintPathCMS:
     def on_item_select(self, event):
         selection = event.widget.curselection()
         if selection:
-            item = self.item_data[selection[0]]
-            self.clear_item_form()
+            self.current_item_index = selection[0]
+            item = self.item_data[self.current_item_index]
+            
+            # Clear text fields without stripping the listbox selection state
+            for entry in self.item_fields.values():
+                entry.delete(0, tk.END)
+                
             for key in self.item_fields:
                 self.item_fields[key].insert(0, str(item.get(key, '')))
 
@@ -140,6 +149,7 @@ class PrintPathCMS:
         for entry in self.item_fields.values():
             entry.delete(0, tk.END)
         self.item_listbox.selection_clear(0, tk.END)
+        self.current_item_index = None
 
     def save_item(self):
         new_item = {}
@@ -156,9 +166,8 @@ class PrintPathCMS:
             messagebox.showwarning("Error Parsing Data", "ID and Name fields are necessary.")
             return
 
-        selection = self.item_listbox.curselection()
-        if selection:
-            self.item_data[selection[0]] = new_item
+        if self.current_item_index is not None:
+            self.item_data[self.current_item_index] = new_item
         else:
             if any(i['id'] == new_item['id'] for i in self.item_data):
                 messagebox.showwarning("Database Conflict", "Product variant ID already exists.")
@@ -171,9 +180,8 @@ class PrintPathCMS:
         messagebox.showinfo("Success", "Catalog Entry updated successfully!")
 
     def delete_item(self):
-        selection = self.item_listbox.curselection()
-        if selection:
-            del self.item_data[selection[0]]
+        if self.current_item_index is not None:
+            del self.item_data[self.current_item_index]
             self.save_json(DATA_FILE, self.item_data)
             self.refresh_item_list()
             self.clear_item_form()
@@ -282,8 +290,13 @@ class PrintPathCMS:
     def on_order_select(self, event):
         selection = event.widget.curselection()
         if selection:
-            order = self.order_data[selection[0]]
-            self.clear_order_form()
+            self.current_order_index = selection[0]
+            order = self.order_data[self.current_order_index]
+            
+            # Clear text fields without stripping selection state
+            for entry in self.order_fields.values():
+                entry.delete(0, tk.END)
+                
             self.order_fields['order_id'].insert(0, order.get('order_id', ''))
             self.order_fields['name'].insert(0, order.get('name', ''))
             self.order_fields['item_name'].insert(0, order.get('item_name', ''))
@@ -294,6 +307,7 @@ class PrintPathCMS:
             entry.delete(0, tk.END)
         self.status_dropdown.set('PENDING')
         self.order_listbox.selection_clear(0, tk.END)
+        self.current_order_index = None
 
     def save_order(self):
         new_order = {
@@ -307,9 +321,8 @@ class PrintPathCMS:
             messagebox.showwarning("Validation Required", "Tracking ID and Student Name are mandated fields.")
             return
 
-        selection = self.order_listbox.curselection()
-        if selection:
-            self.order_data[selection[0]] = new_order
+        if self.current_order_index is not None:
+            self.order_data[self.current_order_index] = new_order
         else:
             if any(o['order_id'] == new_order['order_id'] for o in self.order_data):
                 messagebox.showwarning("Registry Conflict", "This unique Order ID has already been assigned.")
@@ -322,9 +335,8 @@ class PrintPathCMS:
         messagebox.showinfo("Success", "Order workflow pipeline updated!")
 
     def delete_order(self):
-        selection = self.order_listbox.curselection()
-        if selection:
-            del self.order_data[selection[0]]
+        if self.current_order_index is not None:
+            del self.order_data[self.current_order_index]
             self.save_json(PRINTS_FILE, self.order_data)
             self.refresh_order_list()
             self.clear_order_form()

@@ -3,26 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PrintPath | School 3D Printing Service</title>
+    <title>PrintPath</title>
     <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* Modern Hero Banner - Default Light Mode */
+        .hero-modern {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.8)), url('/assets/bg.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: white;
+            text-align: center;
+            padding: 120px 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: background 0.3s;
+        }
+
+        /* Hero Banner - Dark Mode Detection */
+        @media (prefers-color-scheme: dark) {
+            .hero-modern {
+                background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.9)), url('/assets/bg_dark.png');
+                background-size: cover;
+                background-position: center;
+                background-attachment: fixed;
+            }
+        }
+        
+        .hero-modern h2 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            color: white;
+        }
+        
+        .hero-modern p {
+            font-size: 1.2rem;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            color: #f0f0f0;
+            line-height: 1.8;
+        }
+        
+        /* Upgraded Buttons */
+        .btn-large {
+            padding: 15px 45px;
+            font-size: 1.2rem;
+            border-radius: 30px;
+            margin: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0, 174, 66, 0.4);
+        }
+        
+        /* Premium Features Grid */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 20px 5%;
+            margin-bottom: 60px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .feature-card {
+            background: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s;
+            border-top: 4px solid var(--accent);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            color: var(--text-color);
+        }
+        
+        .feature-card p {
+            color: var(--text-color);
+            opacity: 0.8;
+            font-size: 1rem;
+        }
+
+        /* How It Works Timeline */
+        .timeline-section {
+            padding: 40px 5%;
+            max-width: 1000px;
+            margin: 0 auto 80px auto;
+            text-align: center;
+        }
+
+        .timeline-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            color: var(--text-color);
+        }
+
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .timeline-step {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: background-color 0.3s;
+        }
+
+        .step-number {
+            background: var(--accent);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 15px auto;
+        }
+
+        .timeline-step h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--text-color);
+        }
+
+        .timeline-step p {
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+    </style>
 </head>
 <body>
     <header>
         <h1><a href="index.html">PrintPath</a></h1>
         <nav>
+            <a href="get_started.html">Get Started</a>
             <a href="items.html">Presets</a>
             <a href="custom.html">Custom Print</a>
+            <a href="status.html">Track Order</a> 
         </nav>
     </header>
 
-    <main>
-        <section class="hero">
-            <h2>Your Local School 3D Printing Hub</h2>
-            <p>Order custom models or browse our preset catalog. Delivered straight to you at school.</p>
-            <br>
-            <a href="items.html" class="btn">Browse Presets</a>
-            <a href="custom.html" class="btn" style="background: var(--text-color);">Request Custom Print</a>
+    <main style="padding: 0; max-width: 100%;">
+        
+        <section class="hero-modern">
+            <h2>Bring Your Ideas To Life</h2>
+            <p>Your dedicated 3D printing hub. Use our 3D printers and print anything.</p>
+            <div>
+                <a href="get_started.html" class="btn btn-large">Let's Get Started</a>
+            </div>
         </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📦</div>
+                <h3>Curated Presets</h3>
+                <p>Choose from our expanding library of verified, high-quality models that are ready to print instantly.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛠️</div>
+                <h3>Unlimited customisation</h3>
+                <p>Found a cool model that's not on the site? No worries! Just upload a link to the printable and we'll print it for you. It's that easy.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h3>Direct and easy delivery</h3>
+                <p>We print locally. We deliver it to you quickly and easily at school. Easy!</p>
+            </div>
+        </section>
+
+        <section class="timeline-section">
+            <h2>How It Works</h2>
+            <div class="timeline-grid">
+                <div class="timeline-step">
+                    <div class="step-number">1</div>
+                    <h4>Place your order</h4>
+                    <p>Select a preset print, or send your own custom model. No hidden fees, just simple.</p>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number">2</div>
+                    <h4>Grab a coffee - we'll take it from here</h4>
+                    <p>Track your order status live from your couch. You'll see what the status of the print is - and when it's done, you're good to go!</p>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-number">3</div>
+                    <h4>Direct and easy delivery</h4>
+                    <p>Print finished? We'll deliver it to you at school. No need to worry about pick up or anything - we'll take care of it.</p>
+                </div>
+            </div>
+        </section>
+        
     </main>
 </body>
 </html>

@@ -5,22 +5,209 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Presets - PrintPath</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* --- Animations --- */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- Catalog Hero --- */
+        .catalog-hero {
+            background: linear-gradient(135deg, rgba(0, 174, 66, 0.1), rgba(0, 0, 0, 0.02));
+            padding: 60px 20px;
+            text-align: center;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            animation: fadeUp 0.6s ease-out;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .catalog-hero {
+                background: linear-gradient(135deg, rgba(0, 174, 66, 0.15), rgba(255, 255, 255, 0.02));
+            }
+        }
+
+        .catalog-hero h2 {
+            font-size: 2.8rem;
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        .catalog-hero p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        @media (prefers-color-scheme: dark) { .catalog-hero p { color: #aaa; } }
+
+        /* --- Premium Grid & Cards --- */
+        .premium-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 35px;
+            padding-bottom: 60px;
+        }
+
+        .premium-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            animation: fadeUp 0.8s ease-out backwards;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .premium-card { box-shadow: 0 10px 25px rgba(0,0,0,0.3); }
+        }
+
+        .premium-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 174, 66, 0.15);
+        }
+
+        /* Image Wrapper with Hover Zoom */
+        .card-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .card-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .premium-card:hover .card-image-wrapper img {
+            transform: scale(1.08);
+        }
+
+        /* Floating Price Badge */
+        .price-badge {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--accent);
+            font-weight: 800;
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .price-badge { background: rgba(30, 30, 30, 0.95); }
+        }
+
+        /* Card Content */
+        .card-content {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        .btn-view {
+            margin-top: auto;
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view:hover {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        /* Loading State */
+        .loader-text { text-align: center; font-size: 1.2rem; color: #888; padding: 40px; }
+    </style>
 </head>
 <body>
     <header>
         <h1><a href="index.html">PrintPath</a></h1>
         <nav>
+            <a href="get_started.html">Get Started</a>
             <a href="items.html">Presets</a>
             <a href="custom.html">Custom Print</a>
+            <a href="status.html">Track Order</a>
         </nav>
     </header>
 
     <main>
-        <h2>Available Presets</h2>
-        <div id="items-container" class="grid">
-            </div>
+        <div class="catalog-hero">
+            <h2>The Preset Vault</h2>
+            <p>Browse our curated collection of verified, high-quality models ready for immediate printing.</p>
+        </div>
+
+        <div id="premium-items-container" class="premium-grid">
+            <div class="loader-text">Loading catalog...</div>
+        </div>
     </main>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('premium-items-container');
+
+            fetch('data.json')
+                .then(res => {
+                    if (!res.ok) throw new Error("Database offline");
+                    return res.json();
+                })
+                .then(data => {
+                    container.innerHTML = ''; // Clear loader
+                    
+                    if (data.length === 0) {
+                        container.innerHTML = '<div class="loader-text">No presets available right now.</div>';
+                        return;
+                    }
+
+                    data.forEach((item, index) => {
+                        // Staggered animation delay based on index
+                        const delay = index * 0.1;
+                        
+                        const card = document.createElement('div');
+                        card.className = 'premium-card';
+                        card.style.animationDelay = `${delay}s`;
+                        
+                        card.innerHTML = `
+                            <div class="card-image-wrapper">
+                                <img src="${item.image}" alt="${item.name}" loading="lazy">
+                                <div class="price-badge">$${item.price.toFixed(2)}</div>
+                            </div>
+                            <div class="card-content">
+                                <h3>${item.name}</h3>
+                                <a href="item.html?id=${item.id}" class="btn-view">View Details</a>
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                    container.innerHTML = '<div class="loader-text" style="color: #ff3b30;">Unable to load inventory. Please try again later.</div>';
+                });
+        });
+    </script>
 </body>
 </html>

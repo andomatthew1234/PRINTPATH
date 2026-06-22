@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Started - PrintPath</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .path-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1000px;
+            margin: 40px auto;
+        }
+        .path-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 50px 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid transparent;
+        }
+        .path-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 15px 35px rgba(0, 174, 66, 0.15);
+        }
+        .path-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+        .path-card h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        .path-card p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        @media (prefers-color-scheme: dark) {
+            .path-card p { color: #aaa; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">PrintPath</a></h1>
+        <nav>
+            <a href="get_started.html">Get Started</a>
+            <a href="items.html">Presets</a>
+            <a href="custom.html">Custom Print</a>
+            <a href="status.html">Track Order</a>
+        </nav>
+    </header>
+
+    <main>
+        <div style="text-align: center; margin-top: 2rem;">
+            <h1 style="font-size: 2.8rem; margin-bottom: 10px;">Choose Your Path</h1>
+            <p style="font-size: 1.2rem; color: #666;">How would you like to begin your 3D printing journey?</p>
+        </div>
+
+        <div class="path-container">
+            <div class="path-card">
+                <div class="path-icon">🛒</div>
+                <h2>Browse Presets</h2>
+                <p>Explore our catalog of highly-detailed, pre-verified models. Guaranteed high quality with upfront pricing. Perfect for quick gifts or desk pieces.</p>
+                <a href="items.html" class="btn" style="padding: 15px 30px; font-size: 1.1rem; width: 100%;">View Catalog</a>
+            </div>
+
+            <div class="path-card">
+                <div class="path-icon">⚙️</div>
+                <h2>Custom Print</h2>
+                <p>Have your own .STL file or a link from Thingiverse? Send it our way! We'll calculate a custom quote based on weight and print time.</p>
+                <a href="custom.html" class="btn" style="padding: 15px 30px; font-size: 1.1rem; width: 100%; background-color: #333;">Upload Model</a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
