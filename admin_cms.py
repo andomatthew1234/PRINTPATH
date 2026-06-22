@@ -1,118 +1,336 @@
-import tkinter as tk
-from tkinter import messagebox
 import json
 import os
+import tkinter as tk
+from tkinter import messagebox
+import customtkinter as ctk
+
+# Configurations & Styling
+ctk.set_appearance_mode("System")  # Options: "System", "Dark", "Light"
+ctk.set_default_color_theme("green")  # Built-in green theme matches #00AE42 styling nicely
 
 DATA_FILE = 'data.json'
+PRINTS_FILE = 'prints.json'
+
 
 class PrintPathCMS:
+
     def __init__(self, root):
         self.root = root
-        self.root.title("PrintPath CMS")
-        self.root.geometry("600x450")
-        
-        self.data = []
-        self.load_data()
+        self.root.title("PrintPath Core Admin Engine")
+        self.root.geometry("850x600")
 
-        # UI Layout
-        left_frame = tk.Frame(root)
-        left_frame.pack(side=tk.LEFT, fill=tk.Y, padx=10, pady=10)
-        
-        right_frame = tk.Frame(root)
-        right_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True, padx=10, pady=10)
+        # Load Existing Databases
+        self.item_data = self.load_json(DATA_FILE)
+        self.order_data = self.load_json(PRINTS_FILE)
 
-        # Listbox for items
-        self.listbox = tk.Listbox(left_frame, width=30)
-        self.listbox.pack(fill=tk.Y, expand=True)
-        self.listbox.bind('<<ListboxSelect>>', self.on_select)
-        
-        btn_frame = tk.Frame(left_frame)
-        btn_frame.pack(fill=tk.X, pady=5)
-        tk.Button(btn_frame, text="New", command=self.clear_form).pack(side=tk.LEFT, expand=True)
-        tk.Button(btn_frame, text="Delete", command=self.delete_item).pack(side=tk.RIGHT, expand=True)
+        # Tabview Controller
+        self.tabview = ctk.CTkTabview(
+            self.root, segmented_button_selected_color="#00AE42"
+        )
+        self.tabview.pack(padx=20, pady=20, fill="both", expand=True)
 
-        # Form Fields
-        self.fields = {}
+        # Initializing Tab Views
+        self.tab_presets = self.tabview.add("Store Inventory (Presets)")
+        self.tab_orders = self.tabview.add("Order Status Tracker")
+
+        self.setup_presets_tab()
+        self.setup_orders_tab()
+
+    def load_json(self, filepath):
+        if os.path.exists(filepath):
+            with open(filepath, 'r') as f:
+                try:
+                    return json.load(f)
+                except json.JSONDecodeError:
+                    return []
+        return []
+
+    def save_json(self, filepath, data):
+        with open(filepath, 'w') as f:
+            json.dump(data, f, indent=2)
+
+    # ==========================================
+    # TAB 1: STORE PRESETS (data.json)
+    # ==========================================
+    def setup_presets_tab(self):
+        # Configure layout inside preset grid
+        self.tab_presets.grid_columnconfigure(1, weight=1)
+        self.tab_presets.grid_rowconfigure(0, weight=1)
+
+        # Left Column Frame: Items Listbox
+        left_panel = ctk.CTkFrame(self.tab_presets, width=250)
+        left_panel.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+
+        ctk.CTkLabel(
+            left_panel, text="Catalog Items", font=ctk.CTkFont(weight="bold")
+        ).pack(pady=5)
+
+        # Standard Tkinter Listbox wrapped inside a frame (needed for listing)
+        self.item_listbox = tk.Listbox(
+            left_panel,
+            bg="#2A2A2A",
+            fg="white",
+            selectbackground="#00AE42",
+            border=0,
+            highlightthickness=0,
+        )
+        self.item_listbox.pack(fill="both", expand=True, padx=10, pady=5)
+        self.item_listbox.bind('<<ListboxSelect>>', self.on_item_select)
+
+        # Modify actions buttons
+        btn_panel = ctk.CTkFrame(left_panel, fg_color="transparent")
+        btn_panel.pack(fill="x", pady=10, padx=10)
+        ctk.CTkButton(
+            btn_panel, text="New", width=80, command=self.clear_item_form
+        ).pack(side="left", expand=True, padx=2)
+        ctk.CTkButton(
+            btn_panel,
+            text="Delete",
+            width=80,
+            fg_color="#D32F2F",
+            hover_color="#B71C1C",
+            command=self.delete_item,
+        ).pack(side="right", expand=True, padx=2)
+
+        # Right Column Frame: Inputs Form
+        right_panel = ctk.CTkScrollableFrame(self.tab_presets)
+        right_panel.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
+
+        self.item_fields = {}
         labels = ['id', 'name', 'price', 'description', 'image', 'stripe_link']
+
         for i, label in enumerate(labels):
-            tk.Label(right_frame, text=label.capitalize()).grid(row=i, column=0, sticky=tk.W, pady=2)
-            entry = tk.Entry(right_frame, width=40)
-            entry.grid(row=i, column=1, sticky=tk.EW, pady=2)
-            self.fields[label] = entry
+            ctk.CTkLabel(
+                right_panel,
+                text=f"{label.capitalize().replace('_', ' ')}:",
+                font=ctk.CTkFont(size=13),
+            ).grid(row=i * 2, column=0, sticky="w", padx=15, pady=(5, 0))
+            entry = ctk.CTkEntry(right_panel, placeholder_text=f"Enter {label}")
+            entry.grid(row=(i * 2) + 1, column=0, sticky="ew", padx=15, pady=(0, 10))
+            self.item_fields[label] = entry
 
-        tk.Button(right_frame, text="Save Item to JSON", command=self.save_item, bg="#00AE42", fg="white").grid(row=len(labels), column=0, columnspan=2, pady=15, sticky=tk.EW)
-        
-        self.refresh_list()
+        right_panel.grid_columnconfigure(0, weight=1)
 
-    def load_data(self):
-        if os.path.exists(DATA_FILE):
-            with open(DATA_FILE, 'r') as f:
-                self.data = json.load(f)
-        else:
-            self.data = []
+        # Main Dynamic Save Button
+        ctk.CTkButton(
+            right_panel,
+            text="Save Product Entry",
+            font=ctk.CTkFont(weight="bold"),
+            fg_color="#00AE42",
+            hover_color="#008F36",
+            command=self.save_item,
+        ).grid(row=len(labels) * 2, column=0, pady=20, padx=15, sticky="ew")
 
-    def save_to_file(self):
-        with open(DATA_FILE, 'w') as f:
-            json.dump(self.data, f, indent=2)
+        self.refresh_item_list()
 
-    def refresh_list(self):
-        self.listbox.delete(0, tk.END)
-        for item in self.data:
-            self.listbox.insert(tk.END, item['name'])
+    def refresh_item_list(self):
+        self.item_listbox.delete(0, tk.END)
+        for item in self.item_data:
+            self.item_listbox.insert(tk.END, item['name'])
 
-    def on_select(self, event):
+    def on_item_select(self, event):
         selection = event.widget.curselection()
         if selection:
-            index = selection[0]
-            item = self.data[index]
-            self.clear_form()
-            for key in self.fields:
-                self.fields[key].insert(0, str(item.get(key, '')))
+            item = self.item_data[selection[0]]
+            self.clear_item_form()
+            for key in self.item_fields:
+                self.item_fields[key].insert(0, str(item.get(key, '')))
 
-    def clear_form(self):
-        for entry in self.fields.values():
+    def clear_item_form(self):
+        for entry in self.item_fields.values():
             entry.delete(0, tk.END)
-        self.listbox.selection_clear(0, tk.END)
+        self.item_listbox.selection_clear(0, tk.END)
 
     def save_item(self):
         new_item = {}
-        for key, entry in self.fields.items():
+        for key, entry in self.item_fields.items():
             val = entry.get()
             if key == 'price':
-                try: val = float(val)
-                except ValueError: val = 0.0
+                try:
+                    val = float(val)
+                except ValueError:
+                    val = 0.0
             new_item[key] = val
 
         if not new_item['id'] or not new_item['name']:
-            messagebox.showwarning("Error", "ID and Name are required.")
+            messagebox.showwarning("Error Parsing Data", "ID and Name fields are necessary.")
             return
 
-        # Check if updating or adding new
-        selection = self.listbox.curselection()
+        selection = self.item_listbox.curselection()
         if selection:
-            self.data[selection[0]] = new_item
+            self.item_data[selection[0]] = new_item
         else:
-            # Check for duplicate ID
-            if any(i['id'] == new_item['id'] for i in self.data):
-                messagebox.showwarning("Error", "Item with this ID already exists.")
+            if any(i['id'] == new_item['id'] for i in self.item_data):
+                messagebox.showwarning("Database Conflict", "Product variant ID already exists.")
                 return
-            self.data.append(new_item)
+            self.item_data.append(new_item)
 
-        self.save_to_file()
-        self.refresh_list()
-        self.clear_form()
-        messagebox.showinfo("Success", "Saved successfully to data.json")
+        self.save_json(DATA_FILE, self.item_data)
+        self.refresh_item_list()
+        self.clear_item_form()
+        messagebox.showinfo("Success", "Catalog Entry updated successfully!")
 
     def delete_item(self):
-        selection = self.listbox.curselection()
+        selection = self.item_listbox.curselection()
         if selection:
-            index = selection[0]
-            del self.data[index]
-            self.save_to_file()
-            self.refresh_list()
-            self.clear_form()
+            del self.item_data[selection[0]]
+            self.save_json(DATA_FILE, self.item_data)
+            self.refresh_item_list()
+            self.clear_item_form()
+
+    # ==========================================
+    # TAB 2: ORDER PROCESSING SYSTEM (prints.json)
+    # ==========================================
+    def setup_orders_tab(self):
+        self.tab_orders.grid_columnconfigure(1, weight=1)
+        self.tab_orders.grid_rowconfigure(0, weight=1)
+
+        # Left Column Panel: Orders List
+        left_panel = ctk.CTkFrame(self.tab_orders, width=250)
+        left_panel.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
+
+        ctk.CTkLabel(
+            left_panel, text="Active Orders Tracker", font=ctk.CTkFont(weight="bold")
+        ).pack(pady=5)
+
+        self.order_listbox = tk.Listbox(
+            left_panel,
+            bg="#2A2A2A",
+            fg="white",
+            selectbackground="#00AE42",
+            border=0,
+            highlightthickness=0,
+        )
+        self.order_listbox.pack(fill="both", expand=True, padx=10, pady=5)
+        self.order_listbox.bind('<<ListboxSelect>>', self.on_order_select)
+
+        btn_panel = ctk.CTkFrame(left_panel, fg_color="transparent")
+        btn_panel.pack(fill="x", pady=10, padx=10)
+        ctk.CTkButton(
+            btn_panel, text="New Order", width=80, command=self.clear_order_form
+        ).pack(side="left", expand=True, padx=2)
+        ctk.CTkButton(
+            btn_panel,
+            text="Delete",
+            width=80,
+            fg_color="#D32F2F",
+            hover_color="#B71C1C",
+            command=self.delete_order,
+        ).pack(side="right", expand=True, padx=2)
+
+        # Right Column Panel: Dynamic Order Forms
+        right_panel = ctk.CTkFrame(self.tab_orders)
+        right_panel.grid(row=0, column=1, sticky="nsew", padx=10, pady=10)
+        right_panel.grid_columnconfigure(0, weight=1)
+
+        self.order_fields = {}
+
+        # Fields Config
+        ctk.CTkLabel(right_panel, text="Unique System Tracking ID (e.g., PP-1004):").grid(
+            row=0, column=0, sticky="w", padx=20, pady=(10, 0)
+        )
+        self.order_fields['order_id'] = ctk.CTkEntry(
+            right_panel, placeholder_text="PP-XXXX"
+        )
+        self.order_fields['order_id'].grid(row=1, column=0, sticky="ew", padx=20, pady=(0, 10))
+
+        ctk.CTkLabel(right_panel, text="Student Name:").grid(
+            row=2, column=0, sticky="w", padx=20, pady=(5, 0)
+        )
+        self.order_fields['name'] = ctk.CTkEntry(
+            right_panel, placeholder_text="Enter customer name"
+        )
+        self.order_fields['name'].grid(row=3, column=0, sticky="ew", padx=20, pady=(0, 10))
+
+        ctk.CTkLabel(right_panel, text="Print Item / Model Name:").grid(
+            row=4, column=0, sticky="w", padx=20, pady=(5, 0)
+        )
+        self.order_fields['item_name'] = ctk.CTkEntry(
+            right_panel, placeholder_text="E.g., Custom Drone Gear or Green Goblin Bust"
+        )
+        self.order_fields['item_name'].grid(row=5, column=0, sticky="ew", padx=20, pady=(0, 10))
+
+        ctk.CTkLabel(right_panel, text="Production Pipeline Status:").grid(
+            row=6, column=0, sticky="w", padx=20, pady=(5, 0)
+        )
+        status_options = ['PENDING', 'QUEUE', 'PRINTING', 'WAITING', 'DELIVERED']
+        self.status_dropdown = ctk.CTkOptionMenu(
+            right_panel, values=status_options, button_color="#00AE42", dropdown_hover_color="#008F36"
+        )
+        self.status_dropdown.grid(row=7, column=0, sticky="ew", padx=20, pady=(0, 10))
+        self.status_dropdown.set('PENDING')
+
+        # Action Execution Button
+        ctk.CTkButton(
+            right_panel,
+            text="Sync Order & Status",
+            font=ctk.CTkFont(weight="bold"),
+            fg_color="#00AE42",
+            hover_color="#008F36",
+            command=self.save_order,
+        ).grid(row=8, column=0, pady=30, padx=20, sticky="ew")
+
+        self.refresh_order_list()
+
+    def refresh_order_list(self):
+        self.order_listbox.delete(0, tk.END)
+        for order in self.order_data:
+            self.order_listbox.insert(
+                tk.END, f"{order['order_id']} - {order['name']}"
+            )
+
+    def on_order_select(self, event):
+        selection = event.widget.curselection()
+        if selection:
+            order = self.order_data[selection[0]]
+            self.clear_order_form()
+            self.order_fields['order_id'].insert(0, order.get('order_id', ''))
+            self.order_fields['name'].insert(0, order.get('name', ''))
+            self.order_fields['item_name'].insert(0, order.get('item_name', ''))
+            self.status_dropdown.set(order.get('status', 'PENDING'))
+
+    def clear_order_form(self):
+        for entry in self.order_fields.values():
+            entry.delete(0, tk.END)
+        self.status_dropdown.set('PENDING')
+        self.order_listbox.selection_clear(0, tk.END)
+
+    def save_order(self):
+        new_order = {
+            'order_id': self.order_fields['order_id'].get().upper().strip(),
+            'name': self.order_fields['name'].get().strip(),
+            'item_name': self.order_fields['item_name'].get().strip(),
+            'status': self.status_dropdown.get(),
+        }
+
+        if not new_order['order_id'] or not new_order['name']:
+            messagebox.showwarning("Validation Required", "Tracking ID and Student Name are mandated fields.")
+            return
+
+        selection = self.order_listbox.curselection()
+        if selection:
+            self.order_data[selection[0]] = new_order
+        else:
+            if any(o['order_id'] == new_order['order_id'] for o in self.order_data):
+                messagebox.showwarning("Registry Conflict", "This unique Order ID has already been assigned.")
+                return
+            self.order_data.append(new_order)
+
+        self.save_json(PRINTS_FILE, self.order_data)
+        self.refresh_order_list()
+        self.clear_order_form()
+        messagebox.showinfo("Success", "Order workflow pipeline updated!")
+
+    def delete_order(self):
+        selection = self.order_listbox.curselection()
+        if selection:
+            del self.order_data[selection[0]]
+            self.save_json(PRINTS_FILE, self.order_data)
+            self.refresh_order_list()
+            self.clear_order_form()
+
 
 if __name__ == "__main__":
-    root = tk.Tk()
+    root = ctk.CTk()
     app = PrintPathCMS(root)
     root.mainloop()
