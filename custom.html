@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Request - PrintPath</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">PrintPath</a></h1>
+        <nav>
+            <a href="items.html">Presets</a>
+            <a href="custom.html">Custom Print</a>
+            <a href="status.html">Track Order</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2 style="text-align: center; margin-bottom: 20px;">Request a Custom Print</h2>
+        <form action="YOUR_FORMSPREE_ENDPOINT" method="POST">
+            <input type="hidden" name="_next" value="/checkout.html">
+            
+            <div class="form-group">
+                <label>Full Name *</label>
+                <input type="text" name="name" required>
+            </div>
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label>Delivery Address / Classroom *</label>
+                <input type="text" name="address" required>
+            </div>
+            <div class="form-group">
+                <label>Phone Number (Optional)</label>
+                <input type="tel" name="phone">
+            </div>
+            <div class="form-group">
+                <label>Link to 3D Model (Thingiverse, Printables, Google Drive) *</label>
+                <input type="url" name="model_link" required placeholder="https://...">
+            </div>
+            <button type="submit" class="btn">Submit Request & Pay</button>
+        </form>
+    </main>
+</body>
+</html>

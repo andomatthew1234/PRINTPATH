@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order - PrintPath</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1><a href="index.html">PrintPath</a></h1>
+        <nav>
+            <a href="items.html">Presets</a>
+            <a href="custom.html">Custom Print</a>
+            <a href="status.html">Track Order</a>
+        </nav>
+    </header>
+
+    <main>
+        <div id="status-search">
+            <h2 style="text-align: center; margin-bottom: 20px;">Track Your Print</h2>
+            <form id="status-form">
+                <div class="form-group">
+                    <label style="text-align: center;">Enter your Order ID (e.g., PP-1234)</label>
+                    <input type="text" id="order_id_input" required style="text-align: center; font-size: 1.2rem; text-transform: uppercase;">
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Check Status</button>
+            </form>
+            <div id="status-error" style="color: red; text-align: center; margin-top: 15px; display: none; font-weight: bold;"></div>
+        </div>
+
+        <div id="status-result" style="display: none; background: var(--card-bg); padding: 2rem; border-radius: 8px; border-top: 5px solid var(--accent); max-width: 600px; margin: 0 auto; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+            <h2 id="status-title" style="color: var(--accent); margin-bottom: 5px;"></h2>
+            <p id="status-desc" style="font-size: 1.1rem; color: #555;"></p>
+            
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ddd;">
+            
+            <p><strong>Order ID:</strong> <span id="display-order-id"></span></p>
+            <p><strong>Customer:</strong> <span id="display-name"></span></p>
+            <p><strong>Item:</strong> <span id="display-item"></span></p>
+            
+            <button class="btn" style="margin-top: 25px; width: 100%; background-color: #333;" onclick="location.reload()">Track Another Order</button>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

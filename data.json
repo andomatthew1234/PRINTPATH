@@ -1,0 +1,18 @@
+[
+  {
+    "id": "green-goblin",
+    "name": "Green Goblin Bust",
+    "price": 15.00,
+    "description": "A highly detailed 3D printed bust of the Green Goblin. Perfect for desk display.",
+    "image": "https://via.placeholder.com/300x300.png?text=Green+Goblin",
+    "stripe_link": "https://buy.stripe.com/test_link1"
+  },
+  {
+    "id": "benchy",
+    "name": "3D Benchy",
+    "price": 5.00,
+    "description": "The classic 3D printing torture test and a cute little boat.",
+    "image": "https://via.placeholder.com/300x300.png?text=Benchy",
+    "stripe_link": "https://buy.stripe.com/test_link2"
+  }
+]
