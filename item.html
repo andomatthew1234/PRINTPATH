@@ -22,7 +22,6 @@
             animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Stack on smaller screens */
         @media (max-width: 768px) {
             .product-showcase { grid-template-columns: 1fr; gap: 30px; }
         }
@@ -49,9 +48,7 @@
         }
 
         /* --- Info Side --- */
-        .product-info {
-            padding: 10px 0;
-        }
+        .product-info { padding: 10px 0; }
 
         .back-link {
             display: inline-block;
@@ -66,7 +63,7 @@
 
         .product-info h2 {
             font-size: 2.8rem;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             color: var(--text-color);
             line-height: 1.2;
         }
@@ -76,16 +73,89 @@
             font-weight: 800;
             color: var(--accent);
             margin-bottom: 25px;
+            transition: color 0.3s;
         }
 
         .product-desc {
             font-size: 1.15rem;
             line-height: 1.7;
             color: #666;
-            margin-bottom: 35px;
+            margin-bottom: 30px;
         }
 
         @media (prefers-color-scheme: dark) { .product-desc { color: #bbb; } }
+
+        /* --- Filament Material Selector --- */
+        .material-selector {
+            background: rgba(0,0,0,0.02);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 35px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        @media (prefers-color-scheme: dark) { 
+            .material-selector { background: rgba(255,255,255,0.03); border-color: rgba(255,255,255,0.1); } 
+        }
+
+        .material-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .material-header h4 {
+            font-size: 1.1rem;
+            color: var(--text-color);
+            margin: 0;
+        }
+
+        .selected-material-name {
+            font-size: 0.95rem;
+            color: #888;
+            font-weight: 600;
+        }
+
+        .swatch-container {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .swatch {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .swatch:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
+
+        .swatch.active {
+            border-color: var(--accent);
+            transform: scale(1.1);
+            box-shadow: 0 0 0 2px var(--bg-color), 0 0 0 4px var(--accent);
+        }
+
+        .addon-tag {
+            font-size: 0.75rem;
+            position: absolute;
+            top: -10px;
+            right: -15px;
+            background: var(--accent);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
 
         /* Feature Tags */
         .feature-tags {
@@ -127,8 +197,9 @@
             box-shadow: 0 15px 30px rgba(0, 174, 66, 0.4);
         }
         
-        /* Error/Loading State */
         .system-msg { text-align: center; font-size: 1.3rem; margin-top: 100px; color: #888; }
+        
+        .disclaimer { font-size: 0.85rem; color: #888; text-align: center; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -159,45 +230,108 @@
                 return;
             }
 
-            fetch('data.json')
-                .then(res => {
-                    if (!res.ok) throw new Error("Database offline");
-                    return res.json();
-                })
-                .then(data => {
-                    const item = data.find(i => i.id === itemId);
+            // Fetch both Item Data and Filament Data simultaneously
+            Promise.all([
+                fetch('data.json').then(res => res.json()),
+                fetch('/data/filament.json').then(res => res.json()).catch(() => []) // Fallback to empty array if file missing
+            ])
+            .then(([itemsData, filaments]) => {
+                const item = itemsData.find(i => i.id === itemId);
 
-                    if (item) {
-                        // Inject Premium Layout
-                        container.innerHTML = `
-                            <div class="product-showcase">
-                                <div class="product-gallery">
-                                    <img src="${item.image}" alt="${item.name}">
+                if (item) {
+                    let basePrice = item.price;
+                    
+                    // Generate Filament UI HTML
+                    let filamentHTML = '';
+                    if (filaments && filaments.length > 0) {
+                        let swatches = '';
+                        filaments.forEach((fil, index) => {
+                            const isActive = index === 0 ? 'active' : '';
+                            const addonLabel = fil.addon_price > 0 ? `<div class="addon-tag">+$${fil.addon_price.toFixed(2)}</div>` : '';
+                            swatches += `
+                                <div class="swatch ${isActive}" 
+                                     style="background-color: ${fil.color_hex};" 
+                                     data-name="${fil.name}" 
+                                     data-addon="${fil.addon_price}">
+                                     ${addonLabel}
                                 </div>
-                                <div class="product-info">
-                                    <a href="items.html" class="back-link">← Back to Catalog</a>
-                                    <h2>${item.name}</h2>
-                                    <div class="product-price">$${item.price.toFixed(2)}</div>
-                                    <p class="product-desc">${item.description}</p>
-                                    
-                                    <div class="feature-tags">
-                                        <div class="feature-tag">✨ Verified Preset</div>
-                                        <div class="feature-tag">🚀 Campus Delivery</div>
-                                        <div class="feature-tag">🛡️ Quality Guarantee</div>
-                                    </div>
-                                    
-                                    <a href="${item.stripe_link}" class="btn-purchase">Proceed to Checkout</a>
+                            `;
+                        });
+
+                        filamentHTML = `
+                            <div class="material-selector">
+                                <div class="material-header">
+                                    <h4>Select Material</h4>
+                                    <span class="selected-material-name" id="display-material-name">${filaments[0].name}</span>
+                                </div>
+                                <div class="swatch-container">
+                                    ${swatches}
                                 </div>
                             </div>
                         `;
-                    } else {
-                        container.innerHTML = '<div class="system-msg" style="color: #ff3b30;">Error: Item not found in catalog. <br><br><a href="items.html" class="btn">Return to Presets</a></div>';
                     }
-                })
-                .catch(err => {
-                    console.error(err);
-                    container.innerHTML = '<div class="system-msg" style="color: #ff3b30;">Unable to connect to database. Please try again later.</div>';
-                });
+
+                    // Inject Premium Layout
+                    container.innerHTML = `
+                        <div class="product-showcase">
+                            <div class="product-gallery">
+                                <img src="${item.image}" alt="${item.name}">
+                            </div>
+                            <div class="product-info">
+                                <a href="items.html" class="back-link">← Back to Catalog</a>
+                                <h2>${item.name}</h2>
+                                <div class="product-price" id="dynamic-price">$${basePrice.toFixed(2)}</div>
+                                <p class="product-desc">${item.description}</p>
+                                
+                                ${filamentHTML}
+                                
+                                <div class="feature-tags">
+                                    <div class="feature-tag">✨ Verified Preset</div>
+                                    <div class="feature-tag">🚀 Campus Delivery</div>
+                                    <div class="feature-tag">🛡️ Quality Guarantee</div>
+                                </div>
+                                
+                                <a href="${item.stripe_link}" class="btn-purchase" id="checkout-btn">Proceed to Checkout</a>
+                                <p class="disclaimer">Note: Custom material selections currently require manual Stripe adjustments if premium filaments are selected.</p>
+                            </div>
+                        </div>
+                    `;
+
+                    // Attach Logic to Material Selector
+                    if (filaments && filaments.length > 0) {
+                        const swatches = document.querySelectorAll('.swatch');
+                        const priceDisplay = document.getElementById('dynamic-price');
+                        const nameDisplay = document.getElementById('display-material-name');
+
+                        swatches.forEach(swatch => {
+                            swatch.addEventListener('click', () => {
+                                // Update active class
+                                swatches.forEach(s => s.classList.remove('active'));
+                                swatch.classList.add('active');
+
+                                // Update text and price
+                                const materialName = swatch.getAttribute('data-name');
+                                const addonPrice = parseFloat(swatch.getAttribute('data-addon'));
+                                
+                                nameDisplay.textContent = materialName;
+                                const newTotal = basePrice + addonPrice;
+                                priceDisplay.textContent = `$${newTotal.toFixed(2)}`;
+                                
+                                // Optional pulse effect on price change
+                                priceDisplay.style.color = 'var(--text-color)';
+                                setTimeout(() => { priceDisplay.style.color = 'var(--accent)'; }, 200);
+                            });
+                        });
+                    }
+
+                } else {
+                    container.innerHTML = '<div class="system-msg" style="color: #ff3b30;">Error: Item not found in catalog. <br><br><a href="items.html" class="btn">Return to Presets</a></div>';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                container.innerHTML = '<div class="system-msg" style="color: #ff3b30;">Unable to connect to database. Please try again later.</div>';
+            });
         });
     </script>
 </body>

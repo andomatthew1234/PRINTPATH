@@ -1,0 +1,34 @@
+[
+  {
+    "id": "pla-black",
+    "name": "Matte Black PLA",
+    "color_hex": "#222222",
+    "addon_price": 0.0
+  },
+  {
+    "id": "pla-white",
+    "name": "Arctic White PLA",
+    "color_hex": "#f0f0f0",
+    "addon_price": 0.0
+  },
+  {
+    "id": "silk-gold",
+    "name": "Silk Gold PLA+",
+    "color_hex": "#D4AF37",
+    "addon_price": 2.5
+  },
+  {
+    "id": "glow-green",
+    "name": "Glow-in-the-Dark Green",
+    "material": "PLA",
+    "color_hex": "#e0ffcd",
+    "addon_price": 3.0
+  },
+  {
+    "id": "carbon",
+    "name": "Carbon Fiber",
+    "material": "PETG",
+    "color_hex": "",
+    "addon_price": 0.0
+  }
+]

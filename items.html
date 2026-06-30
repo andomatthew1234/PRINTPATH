@@ -18,7 +18,7 @@
             padding: 60px 20px;
             text-align: center;
             border-radius: 20px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             animation: fadeUp 0.6s ease-out;
         }
 
@@ -41,6 +41,83 @@
 
         @media (prefers-color-scheme: dark) { .catalog-hero p { color: #aaa; } }
 
+        /* --- Search & Filter System --- */
+        .controls-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 40px;
+            animation: fadeUp 0.7s ease-out backwards;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 16px 25px 16px 50px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            border: 2px solid #e1e1e1;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .search-bar input:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 8px 25px rgba(0, 174, 66, 0.15);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2rem;
+            color: #888;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .search-bar input { border-color: #444; }
+        }
+
+        .filter-tags {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--card-bg);
+            border: 2px solid transparent;
+            color: var(--text-color);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .filter-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
         /* --- Premium Grid & Cards --- */
         .premium-grid {
             display: grid;
@@ -54,7 +131,7 @@
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
             display: flex;
             flex-direction: column;
             animation: fadeUp 0.8s ease-out backwards;
@@ -69,7 +146,6 @@
             box-shadow: 0 15px 35px rgba(0, 174, 66, 0.15);
         }
 
-        /* Image Wrapper with Hover Zoom */
         .card-image-wrapper {
             position: relative;
             width: 100%;
@@ -88,7 +164,6 @@
             transform: scale(1.08);
         }
 
-        /* Floating Price Badge */
         .price-badge {
             position: absolute;
             bottom: 15px;
@@ -107,7 +182,6 @@
             .price-badge { background: rgba(30, 30, 30, 0.95); }
         }
 
-        /* Card Content */
         .card-content {
             padding: 25px;
             display: flex;
@@ -139,8 +213,8 @@
             color: white;
         }
 
-        /* Loading State */
-        .loader-text { text-align: center; font-size: 1.2rem; color: #888; padding: 40px; }
+        .loader-text { text-align: center; font-size: 1.2rem; color: #888; padding: 40px; grid-column: 1 / -1; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -148,7 +222,7 @@
         <h1><a href="index.html">PrintPath</a></h1>
         <nav>
             <a href="get_started.html">Get Started</a>
-            <a href="items.html">Presets</a>
+            <a href="items.html" style="color: var(--accent); font-weight: bold;">Presets</a>
             <a href="custom.html">Custom Print</a>
             <a href="status.html">Track Order</a>
         </nav>
@@ -160,6 +234,20 @@
             <p>Browse our curated collection of verified, high-quality models ready for immediate printing.</p>
         </div>
 
+        <div class="controls-container">
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="search-input" placeholder="Search for models, accessories, gadgets...">
+            </div>
+            
+            <div class="filter-tags">
+                <button class="filter-btn active" data-filter="all">All Models</button>
+                <button class="filter-btn" data-filter="gadget">Gadgets</button>
+                <button class="filter-btn" data-filter="art">Art & Decor</button>
+                <button class="filter-btn" data-filter="utility">Utility</button>
+            </div>
+        </div>
+
         <div id="premium-items-container" class="premium-grid">
             <div class="loader-text">Loading catalog...</div>
         </div>
@@ -168,45 +256,81 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const container = document.getElementById('premium-items-container');
+            const searchInput = document.getElementById('search-input');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            let allItems = [];
+            let currentFilter = 'all';
 
+            // Fetch Data
             fetch('data.json')
                 .then(res => {
                     if (!res.ok) throw new Error("Database offline");
                     return res.json();
                 })
                 .then(data => {
-                    container.innerHTML = ''; // Clear loader
-                    
-                    if (data.length === 0) {
-                        container.innerHTML = '<div class="loader-text">No presets available right now.</div>';
-                        return;
-                    }
-
-                    data.forEach((item, index) => {
-                        // Staggered animation delay based on index
-                        const delay = index * 0.1;
-                        
-                        const card = document.createElement('div');
-                        card.className = 'premium-card';
-                        card.style.animationDelay = `${delay}s`;
-                        
-                        card.innerHTML = `
-                            <div class="card-image-wrapper">
-                                <img src="${item.image}" alt="${item.name}" loading="lazy">
-                                <div class="price-badge">$${item.price.toFixed(2)}</div>
-                            </div>
-                            <div class="card-content">
-                                <h3>${item.name}</h3>
-                                <a href="item.html?id=${item.id}" class="btn-view">View Details</a>
-                            </div>
-                        `;
-                        container.appendChild(card);
-                    });
+                    allItems = data;
+                    renderGrid(allItems);
                 })
                 .catch(err => {
                     console.error(err);
                     container.innerHTML = '<div class="loader-text" style="color: #ff3b30;">Unable to load inventory. Please try again later.</div>';
                 });
+
+            // Render Function
+            function renderGrid(items) {
+                container.innerHTML = '';
+                
+                if (items.length === 0) {
+                    container.innerHTML = '<div class="loader-text">No models found matching your search.</div>';
+                    return;
+                }
+
+                items.forEach((item, index) => {
+                    const delay = (index % 10) * 0.05; // Cap animation delay
+                    const card = document.createElement('div');
+                    card.className = 'premium-card';
+                    card.style.animationDelay = `${delay}s`;
+                    
+                    card.innerHTML = `
+                        <div class="card-image-wrapper">
+                            <img src="${item.image}" alt="${item.name}" loading="lazy">
+                            <div class="price-badge">$${item.price.toFixed(2)}</div>
+                        </div>
+                        <div class="card-content">
+                            <h3>${item.name}</h3>
+                            <a href="item.html?id=${item.id}" class="btn-view">View Details</a>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            }
+
+            // Search Logic
+            searchInput.addEventListener('input', (e) => {
+                applyFilters(e.target.value, currentFilter);
+            });
+
+            // Filter Logic
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = btn.getAttribute('data-filter');
+                    applyFilters(searchInput.value, currentFilter);
+                });
+            });
+
+            function applyFilters(searchTerm, category) {
+                const term = searchTerm.toLowerCase();
+                const filtered = allItems.filter(item => {
+                    const matchesSearch = item.name.toLowerCase().includes(term) || (item.description && item.description.toLowerCase().includes(term));
+                    // Assuming data.json might eventually have a "category" field. If not, it just shows all.
+                    const matchesCategory = category === 'all' || item.category === category;
+                    return matchesSearch && matchesCategory;
+                });
+                renderGrid(filtered);
+            }
         });
     </script>
 </body>
