@@ -659,6 +659,50 @@ a {
     object-fit: cover;
 }
 
+.death-star-media {
+    position: relative;
+    overflow: hidden;
+    background: #f3f3f2;
+}
+
+.death-star-media picture {
+    display: block;
+    height: 100%;
+}
+
+.death-star-image {
+    object-fit: contain;
+}
+
+.star-wars-logo {
+    position: absolute;
+    z-index: 2;
+    top: clamp(24px, 5vw, 54px);
+    left: 50%;
+    transform: translateX(-50%) scaleX(1.12);
+    color: #f5c84b;
+    font-family: Impact, Haettenschweiler, "Arial Black", sans-serif;
+    font-size: clamp(2.7rem, 6vw, 4.7rem);
+    font-weight: 900;
+    line-height: 0.69;
+    letter-spacing: -0.08em;
+    text-align: center;
+    text-shadow:
+        -2px -2px 0 #171717,
+        2px -2px 0 #171717,
+        -2px 2px 0 #171717,
+        2px 2px 0 #171717,
+        0 6px 18px rgba(0, 0, 0, 0.18);
+    pointer-events: none;
+}
+
+.product-disclaimer {
+    margin: -6px 0 0;
+    color: var(--muted);
+    font-size: 0.78rem;
+    line-height: 1.5;
+}
+
 .product-art-large {
     min-height: 520px;
 }
@@ -1002,6 +1046,13 @@ footer p {
     footer {
         flex-direction: column;
         gap: 4px;
+    }
+}
+
+@media (max-width: 600px) {
+    .star-wars-logo {
+        top: 22px;
+        font-size: clamp(2.3rem, 14vw, 3.3rem);
     }
 }
 
