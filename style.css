@@ -483,6 +483,62 @@ a {
     grid-template-columns: minmax(0, 700px);
 }
 
+.shop-catalogue {
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 18px;
+}
+
+.shop-catalogue .product-card {
+    aspect-ratio: 1;
+}
+
+.shop-catalogue .product-card-link {
+    display: grid;
+    grid-template-rows: minmax(0, 48%) minmax(0, 52%);
+    height: 100%;
+}
+
+.shop-catalogue picture {
+    display: block;
+    min-height: 0;
+}
+
+.shop-catalogue .product-card-image {
+    height: 100%;
+    aspect-ratio: auto;
+    padding: 10px;
+}
+
+.shop-catalogue .product-details {
+    align-content: start;
+    gap: 6px 12px;
+    min-height: 0;
+    padding: 13px 16px 15px;
+}
+
+.shop-catalogue .product-label {
+    font-size: 0.62rem;
+}
+
+.shop-catalogue .card-title {
+    font-size: 1.08rem;
+}
+
+.shop-catalogue .price {
+    font-size: 1.12rem;
+}
+
+.shop-catalogue .product-details > p:not(.price) {
+    display: none;
+}
+
+.shop-catalogue .button-buy {
+    min-height: 40px;
+    margin-top: auto;
+    padding: 9px 14px;
+    font-size: 0.82rem;
+}
+
 .product-card {
     overflow: hidden;
     border: 1px solid var(--line);
@@ -703,6 +759,47 @@ a {
     line-height: 1.5;
 }
 
+.spinny-gallery {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    padding: 18px;
+    background: #e9eeea;
+}
+
+.spinny-state {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    min-width: 0;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid rgba(23, 33, 27, 0.09);
+    border-radius: 18px;
+    background: radial-gradient(circle at 50% 38%, #ffffff 0, #f2f5f2 70%, #e7ece8 100%);
+}
+
+.spinny-state img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    object-fit: contain;
+}
+
+.spinny-state figcaption {
+    padding: 12px 14px 14px;
+    border-top: 1px solid rgba(23, 33, 27, 0.08);
+    color: var(--muted);
+    font-size: 0.82rem;
+    line-height: 1.35;
+}
+
+.spinny-state figcaption strong {
+    display: block;
+    color: var(--ink);
+    font-size: 0.92rem;
+}
+
 .product-art-large {
     min-height: 520px;
 }
@@ -782,6 +879,53 @@ a {
 
 .color-section {
     padding-top: 88px;
+}
+
+.details-section {
+    padding-top: 88px;
+}
+
+.spec-card {
+    padding: clamp(24px, 4vw, 40px);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    background: var(--card);
+    box-shadow: 0 14px 36px rgba(20, 45, 29, 0.06);
+}
+
+.spec-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 32px;
+    margin: 0;
+}
+
+.spec-list div {
+    display: grid;
+    grid-template-columns: minmax(110px, 0.45fr) 1fr;
+    gap: 18px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.spec-list dt {
+    color: var(--muted);
+    font-weight: 750;
+}
+
+.spec-list dd {
+    margin: 0;
+    font-weight: 700;
+}
+
+.maker-credit {
+    margin: 28px 0 0;
+    color: var(--muted);
+}
+
+.maker-credit a {
+    color: var(--green-dark);
+    font-weight: 800;
 }
 
 .color-section-standalone {
@@ -949,6 +1093,24 @@ footer p {
         grid-template-columns: 1fr;
     }
 
+    .shop-catalogue {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .shop-catalogue .product-details {
+        padding: 13px 14px 14px;
+    }
+
+    .shop-catalogue .product-details > p:not(.price) {
+        display: none;
+    }
+
+    .shop-catalogue .button-buy {
+        min-height: 44px;
+        padding: 9px 10px;
+    }
+
     .product-showcase,
     .option-grid {
         grid-template-columns: 1fr;
@@ -982,6 +1144,14 @@ footer p {
 
     .color-section {
         padding-top: 64px;
+    }
+
+    .details-section {
+        padding-top: 64px;
+    }
+
+    .spec-list {
+        grid-template-columns: 1fr;
     }
 
     .color-heading {
@@ -1073,6 +1243,24 @@ footer p {
 
     .hero-actions .button {
         width: 100%;
+    }
+
+    .shop-catalogue {
+        grid-template-columns: 1fr;
+    }
+
+    .shop-catalogue .product-details > p:not(.price) {
+        display: -webkit-box;
+        overflow: hidden;
+        font-size: 0.82rem;
+        line-height: 1.35;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+
+    .spec-list div {
+        grid-template-columns: 1fr;
+        gap: 5px;
     }
 }
 
