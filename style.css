@@ -928,6 +928,201 @@ a {
     font-weight: 800;
 }
 
+.shipping-section {
+    padding-top: 88px;
+}
+
+.shipping-map-shell {
+    position: relative;
+    min-height: 620px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    background: #dce8df;
+    box-shadow: 0 20px 54px rgba(20, 45, 29, 0.09);
+}
+
+.shipping-map {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.shipping-checker-card {
+    position: absolute;
+    z-index: 1000;
+    top: 28px;
+    left: 28px;
+    width: min(400px, calc(100% - 56px));
+    padding: 28px;
+    border: 1px solid rgba(220, 228, 221, 0.92);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.94);
+    box-shadow: 0 18px 50px rgba(20, 45, 29, 0.18);
+    backdrop-filter: blur(16px);
+}
+
+.shipping-checker-card h3 {
+    margin: 0;
+    font-size: clamp(1.45rem, 3vw, 1.85rem);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+}
+
+.shipping-checker-card > p {
+    margin: 10px 0 20px;
+    color: var(--muted);
+    font-size: 0.94rem;
+    line-height: 1.5;
+}
+
+.shipping-checker-card label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.shipping-address-host {
+    position: relative;
+}
+
+#shipping-address {
+    width: 100%;
+    min-height: 50px;
+    padding: 12px 15px;
+    border: 1px solid #bdc9bf;
+    border-radius: 13px;
+    background: #ffffff;
+    color: var(--ink);
+    font: inherit;
+    line-height: 1.35;
+    outline: none;
+}
+
+#shipping-address:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 4px rgba(0, 166, 61, 0.14);
+}
+
+.shipping-suggestions {
+    position: absolute;
+    z-index: 3;
+    top: calc(100% + 7px);
+    left: 0;
+    width: 100%;
+    max-height: 220px;
+    margin: 0;
+    padding: 6px;
+    overflow-y: auto;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 14px 32px rgba(20, 45, 29, 0.18);
+    list-style: none;
+}
+
+.shipping-suggestions button {
+    width: 100%;
+    padding: 10px 11px;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    font-size: 0.88rem;
+    line-height: 1.35;
+    text-align: left;
+    cursor: pointer;
+}
+
+.shipping-suggestions button:hover,
+.shipping-suggestions button:focus-visible,
+.shipping-suggestions button.is-active {
+    background: #e2f4e7;
+    outline: none;
+}
+
+.shipping-result {
+    margin-top: 16px;
+    padding: 14px 15px;
+    border: 1px solid #d3ddd5;
+    border-radius: 14px;
+    background: #f1f4f1;
+}
+
+.shipping-result.is-standard,
+.shipping-result.is-extended {
+    border-color: #9dd8b1;
+    background: #e7f7ec;
+}
+
+.shipping-result-title,
+.shipping-result-copy {
+    margin: 0;
+}
+
+.shipping-result-title {
+    color: var(--ink);
+    font-size: 0.96rem;
+    font-weight: 850;
+}
+
+.shipping-result.is-standard .shipping-result-title,
+.shipping-result.is-extended .shipping-result-title {
+    color: var(--green-dark);
+}
+
+.shipping-result-copy {
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 0.82rem;
+    line-height: 1.45;
+}
+
+.shipping-checker-card .shipping-disclaimer,
+.shipping-checker-card .shipping-noscript {
+    margin: 14px 0 0;
+    color: var(--muted);
+    font-size: 0.72rem;
+    line-height: 1.45;
+}
+
+.shipping-marker-shell {
+    background: transparent;
+    border: 0;
+}
+
+.shipping-marker {
+    display: block;
+    width: 28px;
+    height: 28px;
+    transform: rotate(45deg);
+    border: 4px solid #ffffff;
+    border-radius: 50% 50% 50% 0;
+    background: var(--green);
+    box-shadow: 0 5px 14px rgba(20, 45, 29, 0.34);
+}
+
+.shipping-marker::after {
+    content: "";
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    top: 6px;
+    left: 6px;
+    border-radius: 50%;
+    background: #ffffff;
+}
+
+.shipping-map-shell .leaflet-control-zoom a {
+    color: var(--green-dark);
+}
+
+.shipping-map-shell .leaflet-control-attribution {
+    font-size: 0.68rem;
+}
+
 .color-section-standalone {
     padding-top: 0;
 }
@@ -1150,6 +1345,22 @@ footer p {
         padding-top: 64px;
     }
 
+    .shipping-section {
+        padding-top: 64px;
+    }
+
+    .shipping-map-shell {
+        min-height: 700px;
+        border-radius: 22px;
+    }
+
+    .shipping-checker-card {
+        top: 18px;
+        left: 18px;
+        width: calc(100% - 36px);
+        padding: 22px;
+    }
+
     .spec-list {
         grid-template-columns: 1fr;
     }
@@ -1261,6 +1472,17 @@ footer p {
     .spec-list div {
         grid-template-columns: 1fr;
         gap: 5px;
+    }
+
+    .shipping-map-shell {
+        min-height: 760px;
+    }
+
+    .shipping-checker-card {
+        top: 12px;
+        left: 12px;
+        width: calc(100% - 24px);
+        padding: 20px;
     }
 }
 

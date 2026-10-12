@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Discover Spinny Twist, a transforming spiral fidget from PrintPath.">
-    <title>Spinny Twist | PrintPath</title><link rel="stylesheet" href="style.css">
+    <title>Spinny Twist | PrintPath</title><link rel="stylesheet" href="assets/vendor/leaflet.css"><link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header class="site-header">
@@ -48,7 +48,30 @@
                 <p class="maker-credit">Original model by <a href="https://makerworld.com/en/models/2335423-twisty-spiral-fidget?from=search#profileId-2552517">Jasa Designs — Twisty Spiral Fidget on MakerWorld</a>.</p>
             </div>
         </section>
+        <section class="shipping-section" aria-labelledby="shipping-title">
+            <div class="section-heading"><p class="eyebrow">Shipping &amp; Qualification</p><h2 id="shipping-title">Find your delivery area</h2></div>
+            <div class="shipping-map-shell">
+                <div id="shipping-map" class="shipping-map" aria-label="Map of Australia showing the selected delivery address"></div>
+                <div class="shipping-checker-card">
+                    <h3>Check Your Delivery Area</h3>
+                    <p>Enter your address to find out which delivery rates apply to you.</p>
+                    <label for="shipping-address">Australian delivery address</label>
+                    <div class="shipping-address-host">
+                        <input id="shipping-address" type="search" inputmode="search" autocomplete="street-address" placeholder="Start typing your address" aria-autocomplete="list" aria-controls="shipping-suggestions" aria-expanded="false">
+                        <ul id="shipping-suggestions" class="shipping-suggestions" role="listbox" hidden></ul>
+                    </div>
+                    <div id="shipping-result" class="shipping-result is-neutral" role="status" aria-live="polite">
+                        <p class="shipping-result-title">Select an address to check delivery</p>
+                        <p class="shipping-result-copy">We’ll match its postcode against PrintPath’s configured delivery areas.</p>
+                    </div>
+                    <p class="shipping-disclaimer">PrintPath delivery areas are business-specific and are not official Australia Post zones. Suggestions use Photon and OpenStreetMap data; search text is used only to return suggestions.</p>
+                    <noscript><p class="shipping-noscript">JavaScript is required to check delivery qualification.</p></noscript>
+                </div>
+            </div>
+        </section>
     </main>
     <footer><p>PrintPath</p><p>Secure checkout powered by Stripe.</p></footer>
+    <script src="assets/vendor/leaflet.js" defer></script>
+    <script src="shipping-qualification.js" defer></script>
 </body>
 </html>
