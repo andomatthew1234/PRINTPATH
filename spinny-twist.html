@@ -51,20 +51,20 @@
         <section class="shipping-section" aria-labelledby="shipping-title">
             <div class="section-heading"><p class="eyebrow">Shipping &amp; Qualification</p><h2 id="shipping-title">Find your delivery area</h2></div>
             <div class="shipping-map-shell">
-                <div id="shipping-map" class="shipping-map" aria-label="Map of Australia showing the selected delivery address"></div>
+                <div id="shipping-map" class="shipping-map" role="region" aria-labelledby="shipping-title" aria-label="Map of Australia showing the selected delivery address"></div>
                 <div class="shipping-checker-card">
                     <h3>Check Your Delivery Area</h3>
                     <p>Enter your address to find out which delivery rates apply to you.</p>
                     <label for="shipping-address">Australian delivery address</label>
                     <div class="shipping-address-host">
-                        <input id="shipping-address" type="search" inputmode="search" autocomplete="street-address" placeholder="Start typing your address" aria-autocomplete="list" aria-controls="shipping-suggestions" aria-expanded="false">
+                        <input id="shipping-address" type="search" role="combobox" inputmode="search" autocomplete="street-address" placeholder="Start typing your address" aria-autocomplete="list" aria-haspopup="listbox" aria-controls="shipping-suggestions" aria-expanded="false">
                         <ul id="shipping-suggestions" class="shipping-suggestions" role="listbox" hidden></ul>
                     </div>
                     <div id="shipping-result" class="shipping-result is-neutral" role="status" aria-live="polite">
                         <p class="shipping-result-title">Select an address to check delivery</p>
                         <p class="shipping-result-copy">We’ll match its postcode against PrintPath’s configured delivery areas.</p>
                     </div>
-                    <p class="shipping-disclaimer">PrintPath delivery areas are business-specific and are not official Australia Post zones. Suggestions use Photon and OpenStreetMap data; search text is used only to return suggestions.</p>
+                    <p class="shipping-disclaimer">PrintPath delivery areas are business-specific and are not official Australia Post zones. Search text is sent to Photon only to return Australian suggestions using OpenStreetMap data.</p>
                     <noscript><p class="shipping-noscript">JavaScript is required to check delivery qualification.</p></noscript>
                 </div>
             </div>
@@ -72,6 +72,6 @@
     </main>
     <footer><p>PrintPath</p><p>Secure checkout powered by Stripe.</p></footer>
     <script src="assets/vendor/leaflet.js" defer></script>
-    <script src="shipping-qualification.js" defer></script>
+    <script src="shipping-qualification.js?v=3" defer></script>
 </body>
 </html>
