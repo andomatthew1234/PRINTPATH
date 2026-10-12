@@ -3,56 +3,65 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Browse and buy ready-to-print 3D printed products from PrintPath.">
-    <title>PrintPath | 3D Printed Products</title>
+    <meta name="description" content="Discover simple, locally printed fidgets from PrintPath.">
+    <title>PrintPath | Locally Printed Fidgets</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2300a63d'/%3E%3Cpath d='M19 16h17c9 0 15 5 15 14S45 44 36 44H29v8H19V16zm10 9v10h6c4 0 6-2 6-5s-2-5-6-5h-6z' fill='white'/%3E%3C/svg%3E">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header class="site-header">
         <a class="brand" href="./" aria-label="PrintPath home">PrintPath</a>
-        <a class="nav-link" href="#catalogue">Catalogue</a>
+        <nav class="site-nav" aria-label="Primary navigation">
+            <a class="nav-link nav-link-active" href="./" aria-current="page">Home</a>
+            <a class="nav-link" href="shop.html">Shop</a>
+            <a class="nav-link" href="colors.html">Colors and styling</a>
+        </nav>
     </header>
-
     <main>
         <section class="hero" aria-labelledby="hero-title">
             <p class="eyebrow">Simple, local 3D printing</p>
-            <h1 id="hero-title">Pick a print.<br>Buy it in seconds.</h1>
-            <p>Browse our ready-to-go designs and check out securely through Stripe.</p>
-            <a class="button button-primary" href="#catalogue">View catalogue</a>
-        </section>
-
-        <section class="catalogue" id="catalogue" aria-labelledby="catalogue-title">
-            <div class="section-heading">
-                <p class="eyebrow">Catalogue</p>
-                <h2 id="catalogue-title">Ready to print</h2>
+            <h1 id="hero-title">Small prints.<br>Big satisfaction.</h1>
+            <p>Browse tactile desk toys and pocket-sized fidgets, choose your finish, and check out securely when you are ready.</p>
+            <div class="hero-actions">
+                <a class="button button-primary" href="shop.html">Shop all products</a>
+                <a class="button button-secondary" href="colors.html">Explore colors</a>
             </div>
-
-            <div class="product-grid product-grid-single">
+        </section>
+        <section class="home-section" aria-labelledby="featured-title">
+            <div class="section-heading split-heading">
+                <div><p class="eyebrow">Featured prints</p><h2 id="featured-title">Two ways to fidget</h2></div>
+                <a class="text-link" href="shop.html">View the full shop →</a>
+            </div>
+            <div class="product-grid">
                 <article class="product-card">
-                    <a class="product-card-link" href="spiral-cone.html" aria-label="View Spiral Cone Fidget">
-                        <div class="product-art product-art-dual" aria-hidden="true">
-                            <span class="cone cone-one"></span>
-                            <span class="cone cone-two"></span>
-                        </div>
+                    <a class="product-card-link" href="spiral-cone.html" aria-label="View Spiral Cone Fidget, from 7 dollars">
+                        <img class="product-card-image" src="assets/colors/lemon-yellow.webp" alt="Lemon yellow Spiral Cone Fidget" width="800" height="800">
                         <div class="product-details">
-                            <div>
-                                <p class="product-label">Two color options</p>
-                                <h3>Spiral Cone Fidget</h3>
-                            </div>
+                            <div><p class="product-label">Single or dual color</p><h3>Spiral Cone Fidget</h3></div>
                             <p class="price">From $7</p>
-                            <p>A satisfying two-part spiral fidget, available in single or dual color.</p>
+                            <p>A smooth two-part spiral fidget with a satisfying turning motion.</p>
+                            <span class="button button-buy">View product</span>
+                        </div>
+                    </a>
+                </article>
+                <article class="product-card">
+                    <a class="product-card-link" href="pocket-morf-orb.html" aria-label="View Pocket Morf Orb, 4 dollars 50 cents">
+                        <img class="product-card-image" src="assets/products/pocket-morf-orb.webp" alt="Matte Black Pocket Morf Orb" width="1000" height="1000">
+                        <div class="product-details">
+                            <div><p class="product-label">Pocket-sized</p><h3>Pocket Morf Orb</h3></div>
+                            <p class="price">$4.50</p>
+                            <p>A compact articulated orb with a textured, shape-shifting feel.</p>
                             <span class="button button-buy">View product</span>
                         </div>
                     </a>
                 </article>
             </div>
         </section>
+        <section class="home-strip" aria-labelledby="finish-title">
+            <div><p class="eyebrow">Make it yours</p><h2 id="finish-title">Five finishes, one simple choice.</h2><p>See the complete PrintPath palette before choosing your product.</p></div>
+            <a class="button button-buy button-inline" href="colors.html">See colors and styling</a>
+        </section>
     </main>
-
-    <footer>
-        <p>PrintPath</p>
-        <p>Secure checkout powered by Stripe.</p>
-    </footer>
+    <footer><p>PrintPath</p><p>Secure checkout powered by Stripe.</p></footer>
 </body>
 </html>
