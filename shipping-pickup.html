@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Check PrintPath shipping qualification or learn about free pickup in Donvale.">
+    <title>Shipping and Pickup | PrintPath</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/vendor/leaflet.css">
+</head>
+<body>
+    <header class="site-header">
+        <a class="brand" href="./" aria-label="PrintPath home">PrintPath</a>
+        <nav class="site-nav" aria-label="Primary navigation"><a class="nav-link" href="./">Home</a><a class="nav-link" href="shop.html">Shop</a><a class="nav-link" href="colors.html">Colors and styling</a><a class="nav-link nav-link-active" href="shipping-pickup.html" aria-current="page">Shipping and pickup</a><a class="nav-link" href="promotions-bundles.html">Promotions and bundles</a></nav>
+    </header>
+    <main class="page-main shipping-pickup-page">
+        <section class="page-intro" aria-labelledby="delivery-page-title">
+            <p class="eyebrow">Delivery options</p>
+            <h1 id="delivery-page-title">Shipping or free local pickup.</h1>
+            <p>Check which PrintPath delivery area applies to your address, or collect your order from Donvale at no extra cost.</p>
+        </section>
+
+        <div class="delivery-tabs" role="tablist" aria-label="Shipping and pickup options">
+            <button class="delivery-tab is-active" id="shipping-tab" type="button" role="tab" aria-selected="true" aria-controls="shipping-panel">Shipping</button>
+            <button class="delivery-tab" id="pickup-tab" type="button" role="tab" aria-selected="false" aria-controls="pickup-panel" tabindex="-1">Pickup</button>
+        </div>
+
+        <section id="shipping-panel" class="delivery-panel" role="tabpanel" aria-labelledby="shipping-tab">
+            <div class="shipping-map-shell shipping-map-shell-large">
+                <div id="shipping-map" class="shipping-map" role="region" aria-label="Interactive map for checking your delivery area"></div>
+                <div class="shipping-checker-card">
+                    <h2>Check Your Delivery Area</h2>
+                    <p>Enter your address to find out which delivery rates apply to you.</p>
+                    <label for="shipping-address">Australian delivery address</label>
+                    <div class="shipping-address-host">
+                        <input id="shipping-address" type="search" role="combobox" autocomplete="off" aria-autocomplete="list" aria-expanded="false" aria-controls="shipping-suggestions" placeholder="Start typing your address">
+                        <ul id="shipping-suggestions" class="shipping-suggestions" role="listbox" hidden></ul>
+                    </div>
+                    <div id="shipping-result" class="shipping-result is-neutral" role="status" aria-live="polite" aria-busy="false">
+                        <strong class="shipping-result-title">Select an address to check delivery</strong>
+                        <span class="shipping-result-copy">Enter at least three characters, then choose an Australian address from the suggestions.</span>
+                    </div>
+                    <p class="shipping-disclaimer">PrintPath delivery areas are configurable business rules based on postcodes, not official Australia Post zones. Search suggestions are provided by Photon using OpenStreetMap data.</p>
+                    <noscript><p class="shipping-noscript">JavaScript is required for the interactive delivery checker.</p></noscript>
+                </div>
+            </div>
+        </section>
+
+        <section id="pickup-panel" class="delivery-panel pickup-panel" role="tabpanel" aria-labelledby="pickup-tab" hidden>
+            <div class="pickup-card">
+                <div>
+                    <p class="eyebrow">Free local pickup</p>
+                    <h2>Pick up in Donvale for free.</h2>
+                    <p>Select the pickup option during checkout. The exact Donvale pickup address and collection details are revealed after your order is complete.</p>
+                </div>
+                <dl class="pickup-facts">
+                    <div><dt>Pickup cost</dt><dd>Free</dd></div>
+                    <div><dt>Pickup area</dt><dd>Donvale, Victoria</dd></div>
+                    <div><dt>Exact address</dt><dd>Provided after checkout</dd></div>
+                </dl>
+            </div>
+        </section>
+    </main>
+    <footer><p>PrintPath</p><p>Secure checkout powered by Stripe.</p></footer>
+    <script src="assets/vendor/leaflet.js" defer></script>
+    <script src="shipping-qualification.js?v=4" defer></script>
+    <script src="shipping-pickup.js" defer></script>
+</body>
+</html>

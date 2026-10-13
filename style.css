@@ -1385,6 +1385,120 @@ a {
     font-size: 0.68rem;
 }
 
+.shipping-pickup-page {
+    padding-bottom: 88px;
+}
+
+.delivery-tabs {
+    display: inline-flex;
+    gap: 6px;
+    margin: 10px 0 24px;
+    padding: 6px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.7);
+    box-shadow: 0 12px 30px rgba(20, 45, 29, 0.07);
+}
+
+.delivery-tab {
+    min-width: 120px;
+    border: 0;
+    border-radius: 999px;
+    padding: 12px 22px;
+    background: transparent;
+    color: var(--green-dark);
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.delivery-tab:hover,
+.delivery-tab:focus-visible {
+    background: rgba(38, 177, 80, 0.1);
+}
+
+.delivery-tab.is-active {
+    background: var(--green-dark);
+    color: #fff;
+}
+
+.delivery-panel[hidden] {
+    display: none;
+}
+
+.shipping-map-shell-large {
+    min-height: 720px;
+}
+
+.shipping-map-shell-large .shipping-checker-card h2 {
+    margin: 0;
+    font-size: clamp(1.45rem, 3vw, 1.85rem);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+}
+
+.pickup-panel {
+    min-height: 520px;
+}
+
+.pickup-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+    gap: 56px;
+    align-items: center;
+    min-height: 520px;
+    padding: clamp(32px, 7vw, 84px);
+    border: 1px solid rgba(255, 255, 255, 0.75);
+    border-radius: 28px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(225, 242, 230, 0.72));
+    box-shadow: 0 20px 54px rgba(20, 45, 29, 0.09);
+}
+
+.pickup-card h2 {
+    margin: 8px 0 18px;
+    font-size: clamp(2rem, 5vw, 4rem);
+    line-height: 0.98;
+    letter-spacing: -0.055em;
+}
+
+.pickup-card > div > p:last-child {
+    max-width: 620px;
+    color: var(--muted);
+    line-height: 1.65;
+}
+
+.pickup-facts {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.78);
+}
+
+.pickup-facts div {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    padding: 20px 22px;
+    border-bottom: 1px solid var(--line);
+}
+
+.pickup-facts div:last-child {
+    border-bottom: 0;
+}
+
+.pickup-facts dt {
+    color: var(--muted);
+    font-weight: 700;
+}
+
+.pickup-facts dd {
+    margin: 0;
+    color: var(--green-dark);
+    font-weight: 900;
+    text-align: right;
+}
+
 .color-section-standalone {
     padding-top: 0;
 }
@@ -1625,6 +1739,16 @@ footer p {
         left: 18px;
         width: calc(100% - 36px);
         padding: 22px;
+    }
+
+    .shipping-map-shell-large {
+        min-height: 780px;
+    }
+
+    .pickup-card {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        min-height: 0;
     }
 
     .spec-list {
