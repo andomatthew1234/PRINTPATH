@@ -688,6 +688,35 @@ a {
     gap: 18px;
 }
 
+.shop-category + .shop-category {
+    margin-top: 64px;
+}
+
+.shop-category-heading {
+    margin-bottom: 22px;
+}
+
+.shop-category-heading h2 {
+    font-size: clamp(2rem, 4vw, 3.2rem);
+}
+
+.shop-coming-soon {
+    margin: 64px 0 0;
+    padding: 22px 26px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--card);
+    color: var(--muted);
+}
+
+.shop-coming-soon span {
+    display: block;
+    margin-bottom: 4px;
+    color: var(--ink);
+    font-size: 1.1rem;
+    font-weight: 850;
+}
+
 .shop-catalogue .product-card {
     aspect-ratio: 1;
 }
