@@ -1147,6 +1147,16 @@ a {
     font-weight: 700;
 }
 
+.spec-list-single {
+    grid-template-columns: 1fr;
+}
+
+.spec-list a {
+    color: var(--green-dark);
+    font-weight: 800;
+    text-underline-offset: 3px;
+}
+
 .maker-credit {
     margin: 28px 0 0;
     color: var(--muted);
