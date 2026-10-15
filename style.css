@@ -1011,6 +1011,28 @@ a {
     background: #eff1ef;
 }
 
+.product-render-wrap {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+}
+
+.product-render-wrap .product-hero-image {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 1;
+    object-fit: contain;
+}
+
+.product-render-caption {
+    margin: 0;
+    padding: 12px 18px;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    background: rgba(255, 255, 255, 0.72);
+    font-size: 0.76rem;
+    line-height: 1.45;
+}
+
 .product-hero-image {
     display: block;
     width: 100%;
